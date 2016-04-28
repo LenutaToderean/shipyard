@@ -94,19 +94,27 @@ describe('ILM', function() {
     });
 
     it('add new image from public registry', function() {
-        element(by.model('vm.createImage.location')).$('[value= "Public Registry"]').click();
-        /*var select = by.model('vm.createImage.location');
+        // browser.executeScript('document.getElementById("imageLocation").className = ""');
+        element(by.id('imageLocation')).click();
+        element(by.id('imageLocationPublicReg')).click();
+        
+        element(by.id('imageNameSearch')).sendKeys('ubuntu');
 
-        selectDropdownByNumber(select,2);*/
-        //expect(element(by.model('vm.createImage.location')).getAttribute('value')).toEqual('Public Registry');
-        element(by.model('vm.createImage.description')).clear();
-        element(by.model('vm.createImage.description')).sendKeys('image description');
+        browser.wait(protractor.until.elementLocated(by.className('description')), 15000);
+
+        element(by.className('description')).click();
+
+        expect(
+            element(by.id('imageNameSearch')).getAttribute('value')
+        ).toEqual(
+            'ubuntu'
+        );
     });
 
-    it('close modal window for create image', function() {
-        element(by.className('ui negative button create image')).click();
-        //expect(element(by.className('ui fullscreen modal transition create image')).isDisplayed()).toBe(false);
-    });
+    // it('close modal window for create image', function() {
+    //     element(by.className('ui negative button create image')).click();
+    //     //expect(element(by.className('ui fullscreen modal transition create image')).isDisplayed()).toBe(false);
+    // });
     // it('should be able to create a new image', function() {
     //     expect(
     //         element(sy.editProjectHeader).getText()
@@ -125,6 +133,6 @@ describe('ILM', function() {
     //     ).toEqual(
     //         'Description1'
     //     );
-    // })q
+    // })
 
 });

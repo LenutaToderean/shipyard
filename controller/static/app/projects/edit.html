@@ -68,12 +68,15 @@
                                 <div class="fields">
                                     <div class="four wide field">
                                         <label>Location</label>
-                                        <select id="imageLocation" name="location" ng-model="vm.createImage.location" class="ui search fluid dropdown" ng-change="vm.resetValues()">
-                                            <option value="">Choose Location</option>
-                                            <option value="Shipyard Registry" ng-click="console.log('clicked')">Shipyard Registry</option>
-                                            <option value="Public Registry">Public Registry</option>
-                                            <!--<option value="File">File</option>-->
-                                        </select>
+                                        <div id="imageLocation" class="ui selection fluid dropdown location">
+                                            <input type="hidden" name="location">
+                                            <i class="dropdown icon"></i>
+                                            <div class="default text">Choose Location</div>
+                                            <div class="menu">
+                                                <div class="item" data-value="Shipyard Registry">Shipyard Registry</div>
+                                                <div id="imageLocationPublicReg" class="item" data-value="Public Registry">Public Registry</div>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div ng-show="!vm.createImage.location" class="field">
@@ -109,7 +112,7 @@
                                         <label>Image Name </label>
                                         <div class="ui search">
                                             <div class="ui icon input">
-                                                <input class="prompt" type="text" placeholder="Name" />
+                                                <input id="imageNameSearch" class="prompt" type="text" placeholder="Name" />
                                                 <i class="search icon"></i>
                                             </div>
                                             <div class="results"></div>
