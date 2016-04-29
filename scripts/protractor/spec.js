@@ -77,6 +77,7 @@ describe('ILM', function() {
     });
 
     it('should be able to modify an existing project', function() {
+        expect(element(sy.saveProjectButton).getAttribute('class')).toEqual('ui small disabled button');
         element(sy.editProjectName).clear();
         element(sy.editProjectName).sendKeys('Project2');
         element(sy.saveProjectButton).click();
@@ -97,10 +98,17 @@ describe('ILM', function() {
         // browser.executeScript('document.getElementById("imageLocation").className = ""');
         element(by.id('imageLocation')).click();
         element(by.id('imageLocationPublicReg')).click();
-        
+        element(by.id('imageNameSearch')).click();
         element(by.id('imageNameSearch')).sendKeys('ubuntu');
+        element(by.id('createImageTag')).click();
+        element(by.id('createImageTag')).sendKeys('latest');
+        element(by.model('vm.createImage.description')).sendKeys('image description');
+        //element(by.id('saveCreateImage')).setAttribute('class','ui positive right labeled icon button positive');
+       // expect(element(by.id('saveCreateImage')).getAttribute('class')).toEqual('ui right labeled icon positive button ');
+        element(by.id('saveCreateImage')).click();
+        //element(by.className('ui negative button create image')).click();
 
-        browser.wait(protractor.until.elementLocated(by.className('description')), 15000);
+        /*browser.wait(protractor.until.elementLocated(by.className('description')), 15000);
 
         element(by.className('description')).click();
 
@@ -108,7 +116,7 @@ describe('ILM', function() {
             element(by.id('imageNameSearch')).getAttribute('value')
         ).toEqual(
             'ubuntu'
-        );
+        );*/
     });
 
     // it('close modal window for create image', function() {
