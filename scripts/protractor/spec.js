@@ -31,7 +31,12 @@ var sy = {
     createTestImagesToTestCSS: '[placeholder="All images"]',
     createTestSelectImageToTest: by.css('[data-value="busybox:latest"]'),
     createTestSelectImageToTestCSS: '[data-value="busybox:latest"]',
-    createTestSaveButton: by.id('test-create-save-button')
+    createTestSaveButton: by.id('test-create-save-button'),
+    editProjectBuildButtons: by.repeater('test in vm.tests'),
+    editProjectLoadingMsgNegative: by.css('#content > div.ui.padded.grid.ng-scope > div > div > div.ui.icon.message.negative'),
+    editProjectLoadingMsgNegativeCSS: '#content > div.ui.padded.grid.ng-scope > div > div > div.ui.icon.message.negative',
+    editProjectLoadingMsg: by.css('#content > div.ui.padded.grid.ng-scope > div > div > div:nth-child(1)'),
+    editProjectLoadingMsgCSS: '#content > div.ui.padded.grid.ng-scope > div > div > div:nth-child(1)'
 };
 
 function selectDropdownByNumber( mySelect, optionNum ) {
@@ -45,6 +50,7 @@ function selectDropdownByNumber( mySelect, optionNum ) {
 //             - Protractor may not wait for operations other than http calls. This would explain why blocking sleep()'s drastically improve the success rate of these tests
 // TODO: Look for variant of isElementVisible that actually works. Maybe drop to selenium?
 // TODO: Changes browser.sleep's for browser.wait(protractor.ExpectedConditions.visibilityOf($('#create-test-selectize-label')), 60000);
+// TODO: Let's try to comment each step. Even with descriptive names, it's kind of hard to follow
 
 describe('ILM', function() {
     it('should have a title', function() {
@@ -152,6 +158,19 @@ describe('ILM', function() {
         browser.wait(protractor.ExpectedConditions.visibilityOf($(sy.createTestSelectImageToTestCSS)), 60000);
         element(sy.createTestSelectImageToTest).click();
         element(sy.createTestSaveButton).click();
+    });
+
+    it('should be able to run the test', function() {
+        browser.sleep(2000);
+        // Click the play icon for the test
+        element(sy.editProjectBuildButtons.row(0))
+            .element(by.css('i[class="play icon"]')).click();
+        // Wait for status messages / test to build
+        browser.wait(protractor.ExpectedConditions.visibilityOf($(sy.editProjectLoadingMsgCSS)), 60000);
+        // In this case, we expect the test to fail
+        browser.wait(protractor.ExpectedConditions.visibilityOf($(sy.editProjectLoadingMsgNegativeCSS)), 60000);
+        // Expect the message to have the `negative` class (sice build will fail)
+        expect(element(sy.editProjectLoadingMsg).getAttribute('class')).toBe('ui icon message negative');
     });
 
 });
