@@ -68,13 +68,13 @@
                                 <div class="fields">
                                     <div class="four wide field">
                                         <label>Location</label>
-                                        <div id="imageLocation" class="ui selection fluid dropdown location">
+                                        <div id="create-image-location" class="ui selection fluid dropdown location">
                                             <input type="hidden" name="location">
                                             <i class="dropdown icon"></i>
                                             <div class="default text">Choose Location</div>
                                             <div class="menu">
                                                 <div class="item" data-value="Shipyard Registry">Shipyard Registry</div>
-                                                <div id="imageLocationPublicReg" class="item" data-value="Public Registry">Public Registry</div>
+                                                <div id="create-image-location-public-reg" class="item" data-value="Public Registry">Public Registry</div>
                                             </div>
                                         </div>
                                     </div>
@@ -112,7 +112,7 @@
                                         <label>Image Name </label>
                                         <div class="ui search">
                                             <div class="ui icon input">
-                                                <input id="imageNameSearch" class="prompt" type="text" placeholder="Name" />
+                                                <input id="create-image-name-search" class="prompt" type="text" placeholder="Name" />
                                                 <i class="search icon"></i>
                                             </div>
                                             <div class="results"></div>
@@ -120,13 +120,13 @@
                                     </div>
                                     <div ng-show="vm.createImage.location === 'Public Registry'" class="four wide field">
                                         <label>Tag</label>
-                                        <div id="createImageTag" class="ui selection fluid dropdown tag create">
+                                        <div id="create-image-tag" class="ui selection fluid dropdown tag create">
                                             <input type="hidden" name="tag">
                                             <i ng-if="!vm.createImageTagSpin" class="dropdown icon"></i>
                                             <i ng-if="vm.createImageTagSpin" class="repeat icon spin" aria-hidden="true" style="float: right; position: relative; width: auto; font-size: 0.85714286; margin: 0em 0em 0em 1em;"></i>
                                             <div class="default text">Tag</div>
                                             <div class="menu">
-                                                <div ng-repeat="a in vm.publicRegistryTags"
+                                                <div ng-repeat="a in vm.publicRegistryTags" id="tag-results"
                                                      class="item" data-value="{{a.name}}">{{a.name}}</div>
                                             </div>
                                         </div>
@@ -206,7 +206,7 @@
         <div ng-click="vm.cancelCreateSaveImage()" class="ui negative button create image">
             Cancel
         </div>
-        <div ng-click="vm.createSaveImage(vm.createImage)" class="ui positive right labeled icon button {{vm.buttonStyle}}" id="saveCreateImage">
+        <div ng-click="vm.createSaveImage(vm.createImage)" class="ui positive right labeled icon button {{vm.buttonStyle}}" id="create-image-save">
             Save Image
             <i class="save icon"></i>
         </div>
@@ -379,9 +379,9 @@
 </div>
 
 
-<div id="edit-project-test-create-modal-{{vm.randomCreateTestId}}" class="ui fullscreen modal transition">
+<div id="edit-project-test-create-modal-{{vm.randomCreateTestId}}" class="ui fullscreen modal transition create test">
     <i class="close icon"></i>
-    <div class="header">
+    <div class="header" id="create-test-header">
         Create Test
     </div>
     <div class="content">
@@ -429,7 +429,7 @@
                                     </div>
 
                                     <div class="eleven wide field" ng-show="vm.createTest.provider.providerType === 'Clair [Internal]'">
-                                        <label>Select Images to Test</label>
+                                        <label id="create-test-selectize-label">Select Images to Test</label>
                                         <selectize config='vm.createTest.selectizeConfig' options='vm.createTest.selectizeItems' ng-model="vm.createTest.selectizeData" ng-change="vm.setTargetsCreateTest(vm.createTest.selectizeData)"></selectize>
                                     </div>
 
@@ -541,7 +541,7 @@
         <div class="ui negative button">
             Cancel
         </div>
-        <div ng-click="vm.createSaveTest(vm.createTest)" class="ui positive right labeled icon button {{vm.buttonStyle}}">
+        <div id="test-create-save-button" ng-click="vm.createSaveTest(vm.createTest)" class="ui positive right labeled icon button {{vm.buttonStyle}}">
             Save Test
             <i class="save icon"></i>
         </div>
@@ -923,7 +923,7 @@
                                     <div class="item">
                                         <div class="row">
                                             <div class="left column">
-                                                <div ng-click="vm.showTestCreateDialog()" class="ui small green labeled icon button">
+                                                <div ng-click="vm.showTestCreateDialog()" class="ui small green labeled icon button" id="create-new-test-button">
                                                     <i class="plus icon"></i>Add Test
                                                 </div>
                                             </div>

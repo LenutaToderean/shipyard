@@ -1,5 +1,6 @@
 // conf.js
 exports.config = {
     framework: 'jasmine',
-    specs: ['spec.js']
+    specs: ['spec.js'],
+    allScriptsTimeout: 30000
 };

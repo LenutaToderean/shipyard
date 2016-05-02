@@ -13,7 +13,25 @@ var sy = {
     saveProjectButton: by.id('edit-project-save-project'),
     editProjectSaveSuccess: by.id('edit-project-save-success'),
     editProjectSaveFailure: by.id('edit-project-save-failure'),
-    createNewImageButton: by.id('create-new-image-button')
+    createNewImageButton: by.id('create-new-image-button'),
+    createNewTestButton: by.id('create-new-test-button'),
+    createImageModal: by.className('ui fullscreen modal transition create image'),
+    createImageHeader: by.id('create-image-header'),
+    createImageLocation: by.id('create-image-location'),
+    createImageLocationPublicReg: by.id('create-image-location-public-reg'),
+    createImageNameSearch: by.id('create-image-name-search'),
+    createImageTag: by.id('create-image-tag'),
+    createImageDescription: by.model('vm.createImage.description'),
+    createImageSave: by.id('create-image-save'),
+    createTestModal: by.className('ui fullscreen modal transition create test'),
+    createTestHeader: by.id('create-test-header'),
+    createTestProviderDropdown: by.className('ui search fluid dropdown testProvider'),
+    createTestProviderMenuTransitioner: by.className('menu transition visible'),
+    createTestImagesToTest: by.css('[placeholder="All images"]'),
+    createTestImagesToTestCSS: '[placeholder="All images"]',
+    createTestSelectImageToTest: by.css('[data-value="busybox:latest"]'),
+    createTestSelectImageToTestCSS: '[data-value="busybox:latest"]',
+    createTestSaveButton: by.id('test-create-save-button')
 };
 
 function selectDropdownByNumber( mySelect, optionNum ) {
@@ -23,7 +41,10 @@ function selectDropdownByNumber( mySelect, optionNum ) {
         });
 };
 
-// TODO: Look into how protractor *knows* when our app is pending tasks. Can we remove tha `browser.waits`?
+// TODO: Look into how protractor *knows* when our app is pending tasks. Can we remove the `browser.waits`?
+//             - Protractor may not wait for operations other than http calls. This would explain why blocking sleep()'s drastically improve the success rate of these tests
+// TODO: Look for variant of isElementVisible that actually works. Maybe drop to selenium?
+// TODO: Changes browser.sleep's for browser.wait(protractor.ExpectedConditions.visibilityOf($('#create-test-selectize-label')), 60000);
 
 describe('ILM', function() {
     it('should have a title', function() {
@@ -88,59 +109,49 @@ describe('ILM', function() {
         );
     });
 
-    it('open modal window for create image', function() {
+    it('should open modal window for create image', function() {
         element(sy.createNewImageButton).click();
-        expect(element(by.className('ui fullscreen modal transition create image')).isDisplayed()).toBe(true);
-        expect(element(by.id('create-image-header')).getText()).toEqual('Create Image');
+        browser.sleep(2000);
+        expect(element(sy.createImageModal).isDisplayed()).toBe(true);
+        expect(element(sy.createImageHeader).getText()).toEqual('Create Image');
     });
 
-    it('add new image from public registry', function() {
-        // browser.executeScript('document.getElementById("imageLocation").className = ""');
-        element(by.id('imageLocation')).click();
-        element(by.id('imageLocationPublicReg')).click();
-        element(by.id('imageNameSearch')).click();
-        element(by.id('imageNameSearch')).sendKeys('ubuntu');
-        element(by.id('createImageTag')).click();
-        element(by.id('createImageTag')).sendKeys('latest');
-        element(by.model('vm.createImage.description')).sendKeys('image description');
-        //element(by.id('saveCreateImage')).setAttribute('class','ui positive right labeled icon button positive');
-       // expect(element(by.id('saveCreateImage')).getAttribute('class')).toEqual('ui right labeled icon positive button ');
-        element(by.id('saveCreateImage')).click();
-        //element(by.className('ui negative button create image')).click();
-
-        /*browser.wait(protractor.until.elementLocated(by.className('description')), 15000);
-
+    it('should add new image from public registry', function() {
+        element(sy.createImageLocation).click();
+        element(sy.createImageLocationPublicReg).click();
+        element(sy.createImageNameSearch).click();
+        element(sy.createImageNameSearch).sendKeys('busybox');
+        browser.wait(protractor.until.elementLocated(by.className('description')), 60000);
+        browser.sleep(2000);
         element(by.className('description')).click();
-
-        expect(
-            element(by.id('imageNameSearch')).getAttribute('value')
-        ).toEqual(
-            'ubuntu'
-        );*/
+        element(sy.createImageTag).click();
+        browser.wait(protractor.until.elementLocated(by.id('tag-results')), 60000);
+        browser.sleep(2000);
+        element(by.id('tag-results')).click();
+        element(sy.createImageDescription).sendKeys('image description');
+        browser.wait(protractor.until.elementLocated(sy.createImageSave), 60000);
+        browser.sleep(2000);
+        element(sy.createImageSave).click();
     });
 
-    // it('close modal window for create image', function() {
-    //     element(by.className('ui negative button create image')).click();
-    //     //expect(element(by.className('ui fullscreen modal transition create image')).isDisplayed()).toBe(false);
-    // });
-    // it('should be able to create a new image', function() {
-    //     expect(
-    //         element(sy.editProjectHeader).getText()
-    //     ).toEqual(
-    //         'Project Project1'
-    //     );
-    //
-    //     expect(
-    //         element(sy.editProjectName).getAttribute('value')
-    //     ).toEqual(
-    //         'Project1'
-    //     );
-    //
-    //     expect(
-    //         element(sy.editProjectDescription).getAttribute('value')
-    //     ).toEqual(
-    //         'Description1'
-    //     );
-    // })
+    it('should open the tests modal window', function() {
+        browser.sleep(2000);
+        element(sy.createNewTestButton).click();
+        browser.sleep(2000);
+        expect(element(sy.createTestModal).isDisplayed()).toBe(true);
+        expect(element(sy.createTestHeader).getText()).toEqual('Create Test');
+    });
+
+    it('should add new test that references the image', function() {
+        browser.sleep(2000);
+        element(sy.createTestProviderDropdown).click();
+        browser.wait(protractor.until.elementLocated(sy.createTestProviderMenuTransitioner), 60000);
+        $('div[data-value="Clair [Internal]"]').click();
+        browser.wait(protractor.ExpectedConditions.visibilityOf($(sy.createTestImagesToTestCSS)), 60000);
+        element(sy.createTestImagesToTest).click();
+        browser.wait(protractor.ExpectedConditions.visibilityOf($(sy.createTestSelectImageToTestCSS)), 60000);
+        element(sy.createTestSelectImageToTest).click();
+        element(sy.createTestSaveButton).click();
+    });
 
 });
