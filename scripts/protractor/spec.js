@@ -36,7 +36,9 @@ var sy = {
     editProjectLoadingMsgNegative: by.css('#content > div.ui.padded.grid.ng-scope > div > div > div.ui.icon.message.negative'),
     editProjectLoadingMsgNegativeCSS: '#content > div.ui.padded.grid.ng-scope > div > div > div.ui.icon.message.negative',
     editProjectLoadingMsg: by.css('#content > div.ui.padded.grid.ng-scope > div > div > div:nth-child(1)'),
-    editProjectLoadingMsgCSS: '#content > div.ui.padded.grid.ng-scope > div > div > div:nth-child(1)'
+    editProjectLoadingMsgCSS: '#content > div.ui.padded.grid.ng-scope > div > div > div:nth-child(1)',
+    editProjectGoToProjectsButton: by.css('#content > div.ui.padded.grid.ng-scope > div > div > div.ui.segment.page > div > div.column.row > div > h3 > span > a'),
+    projectListTableOfProjects: by.repeater('a in filteredProjects = (vm.projects | filter:tableFilter)')
 };
 
 function selectDropdownByNumber( mySelect, optionNum ) {
@@ -129,11 +131,11 @@ describe('ILM', function() {
         element(sy.createImageNameSearch).sendKeys('busybox');
         browser.wait(protractor.until.elementLocated(by.className('description')), 60000);
         browser.sleep(2000);
-        element(by.className('description')).click();
+        element.all(by.className('description')).get(0).click();
         element(sy.createImageTag).click();
         browser.wait(protractor.until.elementLocated(by.id('tag-results')), 60000);
         browser.sleep(2000);
-        element(by.id('tag-results')).click();
+        element.all(by.id('tag-results')).get(0).click();
         element(sy.createImageDescription).sendKeys('image description');
         browser.wait(protractor.until.elementLocated(sy.createImageSave), 60000);
         browser.sleep(2000);
@@ -171,6 +173,27 @@ describe('ILM', function() {
         browser.wait(protractor.ExpectedConditions.visibilityOf($(sy.editProjectLoadingMsgNegativeCSS)), 60000);
         // Expect the message to have the `negative` class (sice build will fail)
         expect(element(sy.editProjectLoadingMsg).getAttribute('class')).toBe('ui icon message negative');
+    });
+
+    it('should be able return to project listing via the `Go To Projects` icon', function() {
+        browser.sleep(2000);
+        // Click the `Go To Projects` button
+        element(sy.editProjectGoToProjectsButton).click();
+        // Wait for
+        var projectName = element.all(sy.projectListTableOfProjects).get(-1)
+            .element(by.css('#project-name'));
+        browser.wait(protractor.ExpectedConditions.visibilityOf(projectName, 60000));
+    });
+
+    it('should be able to enter the project"s inspect view', function() {
+        browser.sleep(2000);
+        // Click the `inspect` button for the project
+        element.all(sy.projectListTableOfProjects).get(-1)
+            .element(by.className('search icon')).click();
+        // Wait for the inspect view to load and assert success
+        var inspectHeader = element(by.css('.ui.header .content'));
+        browser.wait(protractor.ExpectedConditions.visibilityOf(inspectHeader, 60000));
+        expect(inspectHeader.getText()).toEqual('Project Results');
     });
 
 });
