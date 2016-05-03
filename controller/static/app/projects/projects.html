@@ -79,7 +79,7 @@
                         <span class="hidden">{{a.status}}</span>
                     </td>
                     <td class="collapsing">{{a.id | limitTo:12}}</td>
-                    <td>{{a.name}}</td>
+                    <td id="project-name">{{a.name}}</td>
                     <td>{{a.lastRun}}</td>
                     <td class="collapsing">
                         <div ui-sref="dashboard.inspect_project({id: a.id})" class="basic compact blue ui icon button">
