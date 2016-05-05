@@ -29,8 +29,8 @@ var sy = {
     createTestProviderMenuTransitioner: by.className('menu transition visible'),
     createTestImagesToTest: by.css('[placeholder="All images"]'),
     createTestImagesToTestCSS: '[placeholder="All images"]',
-    createTestSelectImageToTest: by.css('[data-value="busybox:latest"]'),
-    createTestSelectImageToTestCSS: '[data-value="busybox:latest"]',
+    createTestSelectImageToTest: by.css('[data-value="alpine:latest"]'),
+    createTestSelectImageToTestCSS: '[data-value="alpine:latest"]',
     createTestSaveButton: by.id('test-create-save-button'),
     editProjectBuildButtons: by.repeater('test in vm.tests'),
     editProjectLoadingMsgNegative: by.css('#content > div.ui.padded.grid.ng-scope > div > div > div.ui.icon.message.negative'),
@@ -125,10 +125,14 @@ describe('ILM', function() {
     });
 
     it('should add new image from public registry', function() {
+        browser.sleep(2000);
         element(sy.createImageLocation).click();
+        browser.sleep(2000);
         element(sy.createImageLocationPublicReg).click();
+        browser.sleep(2000);
         element(sy.createImageNameSearch).click();
-        element(sy.createImageNameSearch).sendKeys('busybox');
+        browser.sleep(2000);
+        element(sy.createImageNameSearch).sendKeys('alpine');
         browser.wait(protractor.until.elementLocated(by.className('description')), 60000);
         browser.sleep(2000);
         element.all(by.className('description')).get(0).click();
@@ -170,7 +174,7 @@ describe('ILM', function() {
         // Wait for status messages / test to build
         browser.wait(protractor.ExpectedConditions.visibilityOf($(sy.editProjectLoadingMsgCSS)), 60000);
         // In this case, we expect the test to fail
-        browser.wait(protractor.ExpectedConditions.visibilityOf($(sy.editProjectLoadingMsgNegativeCSS)), 60000);
+        browser.wait(protractor.ExpectedConditions.visibilityOf($(sy.editProjectLoadingMsgNegativeCSS)), 600000);
         // Expect the message to have the `negative` class (sice build will fail)
         expect(element(sy.editProjectLoadingMsg).getAttribute('class')).toBe('ui icon message negative');
     });
@@ -183,6 +187,17 @@ describe('ILM', function() {
         var projectName = element.all(sy.projectListTableOfProjects).get(-1)
             .element(by.css('#project-name'));
         browser.wait(protractor.ExpectedConditions.visibilityOf(projectName, 60000));
+    });
+
+    it('should be able to enter the project"s inspect view', function() {
+        browser.sleep(2000);
+        // Click the `inspect` button for the project
+        element.all(sy.projectListTableOfProjects).get(-1)
+            .element(by.className('search icon')).click();
+        // Wait for the inspect view to load and assert success
+        var inspectHeader = element(by.css('.ui.header .content'));
+        browser.wait(protractor.ExpectedConditions.visibilityOf(inspectHeader, 60000));
+        expect(inspectHeader.getText()).toEqual('Project Results');
     });
 
     it('should be able to enter the project"s inspect view', function() {
