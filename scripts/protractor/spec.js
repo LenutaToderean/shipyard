@@ -1,3 +1,11 @@
+var config = {
+    projectName: 'Selenium Project',
+    projectNameOnEdit: 'Selenium Project Edited',
+    testName: 'Pied Piper',
+    imageName: 'alpine',
+    tag: 'latest'
+};
+
 var sy = {
     usernameInputField: by.model('vm.username'),
     passwordInputField: by.model('vm.password'),
@@ -25,12 +33,13 @@ var sy = {
     createImageSave: by.id('create-image-save'),
     createTestModal: by.className('ui fullscreen modal transition create test'),
     createTestHeader: by.id('create-test-header'),
+    createTestDisplayName: by.id("create-test-display-name"),
     createTestProviderDropdown: by.className('ui search fluid dropdown testProvider'),
     createTestProviderMenuTransitioner: by.className('menu transition visible'),
     createTestImagesToTest: by.css('[placeholder="All images"]'),
     createTestImagesToTestCSS: '[placeholder="All images"]',
-    createTestSelectImageToTest: by.css('[data-value="alpine:latest"]'),
-    createTestSelectImageToTestCSS: '[data-value="alpine:latest"]',
+    createTestSelectImageToTest: by.css('[data-value="' + config.testName + ':' + config.tag + '"]'),
+    createTestSelectImageToTestCSS: '[data-value="' + config.testName + ':' + config.tag + '"]',
     createTestSaveButton: by.id('test-create-save-button'),
     editProjectBuildButtons: by.repeater('test in vm.tests'),
     editProjectLoadingMsgNegative: by.css('#content > div.ui.padded.grid.ng-scope > div > div > div.ui.icon.message.negative'),
@@ -38,7 +47,9 @@ var sy = {
     editProjectLoadingMsg: by.css('#content > div.ui.padded.grid.ng-scope > div > div > div:nth-child(1)'),
     editProjectLoadingMsgCSS: '#content > div.ui.padded.grid.ng-scope > div > div > div:nth-child(1)',
     editProjectGoToProjectsButton: by.css('#content > div.ui.padded.grid.ng-scope > div > div > div.ui.segment.page > div > div.column.row > div > h3 > span > a'),
-    projectListTableOfProjects: by.repeater('a in filteredProjects = (vm.projects | filter:tableFilter)')
+    projectListTableOfProjects: by.repeater('a in filteredProjects = (vm.projects | filter:tableFilter)'),
+    inspectViewBuilds: by.repeater('test in vm.results.testResults'),
+    inspectViewTestName: by.id('inspect-view-test-name')
 };
 
 function selectDropdownByNumber( mySelect, optionNum ) {
@@ -79,7 +90,7 @@ describe('ILM', function() {
     });
     
     it('should be able to create a new project', function() {
-        element(sy.createProjectName).sendKeys('Project1');
+        element(sy.createProjectName).sendKeys(config.projectName);
         element(sy.createProjectDescription).sendKeys('Description1');
         element(sy.createProjectButton).click();
         // browser.wait(protractor.until.elementLocated(sy.editProjectHeader), 15000);
@@ -89,13 +100,13 @@ describe('ILM', function() {
         expect(
             element(sy.editProjectHeader).getText()
         ).toEqual(
-            'Project Project1'
+            'Project ' + config.projectName
         );
     
         expect(
             element(sy.editProjectName).getAttribute('value')
         ).toEqual(
-            'Project1'
+            config.projectName
         );
     
         expect(
@@ -108,12 +119,12 @@ describe('ILM', function() {
     it('should be able to modify an existing project', function() {
         expect(element(sy.saveProjectButton).getAttribute('class')).toEqual('ui small disabled button');
         element(sy.editProjectName).clear();
-        element(sy.editProjectName).sendKeys('Project2');
+        element(sy.editProjectName).sendKeys(config.projectNameOnEdit);
         element(sy.saveProjectButton).click();
         expect(
             element(sy.editProjectName).getAttribute('value')
         ).toEqual(
-            'Project2'
+            config.projectNameOnEdit
         );
     });
 
@@ -132,7 +143,7 @@ describe('ILM', function() {
         browser.sleep(2000);
         element(sy.createImageNameSearch).click();
         browser.sleep(2000);
-        element(sy.createImageNameSearch).sendKeys('alpine');
+        element(sy.createImageNameSearch).sendKeys(config.testName);
         browser.wait(protractor.until.elementLocated(by.className('description')), 60000);
         browser.sleep(2000);
         element.all(by.className('description')).get(0).click();
@@ -163,6 +174,14 @@ describe('ILM', function() {
         element(sy.createTestImagesToTest).click();
         browser.wait(protractor.ExpectedConditions.visibilityOf($(sy.createTestSelectImageToTestCSS)), 60000);
         element(sy.createTestSelectImageToTest).click();
+        element(sy.createTestDisplayName).sendKeys(config.testName);
+        browser.sleep(2000);
+        element(sy.saveProjectButton).click();
+        expect(
+            element(sy.createTestDisplayName).getAttribute('value')
+        ).toEqual(
+            config.testName
+        );
         element(sy.createTestSaveButton).click();
     });
 
@@ -200,10 +219,10 @@ describe('ILM', function() {
         expect(inspectHeader.getText()).toEqual('Project Results');
     });
 
-    it('should be able to enter the project"s inspect view', function() {
+    it('should have the build we just ran', function() {
         browser.sleep(2000);
         // Click the `inspect` button for the project
-        element.all(sy.projectListTableOfProjects).get(-1)
+        element.all(sy.inspectViewBuilds).get(-1)
             .element(by.className('search icon')).click();
         // Wait for the inspect view to load and assert success
         var inspectHeader = element(by.css('.ui.header .content'));
