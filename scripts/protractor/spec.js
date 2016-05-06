@@ -65,24 +65,20 @@ describe('ILM', function() {
         element(sy.usernameInputField).sendKeys('admin ');
         element(sy.passwordInputField).sendKeys('shipyard');
         element(sy.loginSubmitButton).click();
-        // browser.wait(protractor.until.elementLocated(sy.ilmButton), 15000);
     });
 
     it('should be able to navigate to project list', function() {
         element(sy.ilmButton).click();
-        // browser.wait(protractor.until.elementLocated(sy.createNewProjectButton), 15000);
     });
 
     it('should be able to navigate to the project create view', function() {
         element(sy.createNewProjectButton).click();
-        // browser.wait(protractor.until.elementLocated(sy.createProjectButton), 15000);
     });
     
     it('should be able to create a new project', function() {
         element(sy.createProjectName).sendKeys(config.projectName);
         element(sy.createProjectDescription).sendKeys('Description1');
         element(sy.createProjectButton).click();
-        // browser.wait(protractor.until.elementLocated(sy.editProjectHeader), 15000);
     });
 
     it('project should be successfully created', function() {
@@ -119,7 +115,6 @@ describe('ILM', function() {
 
     it('should open modal window for create image', function() {
         element(sy.createNewImageButton).click();
-        // browser.sleep(2000);
         browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.createImageModal)), 60000);
         expect(element(sy.createImageModal).isDisplayed()).toBe(true);
         expect(element(sy.createImageHeader).getText()).toEqual('Create Image');
@@ -195,7 +190,6 @@ describe('ILM', function() {
         browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.editProjectGoToProjectsButton), 60000));
         // Click the `Go To Projects` button
         element(sy.editProjectGoToProjectsButton).click();
-        // Wait for
         var projectName = element.all(sy.projectListTableOfProjects).get(-1)
             .element(by.css('#project-name'));
         browser.wait(protractor.ExpectedConditions.visibilityOf(projectName, 60000));
