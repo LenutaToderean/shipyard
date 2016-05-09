@@ -53,11 +53,12 @@ var sy = {
 };
 
 // TODO: Let's try to comment each step. Even with descriptive names, it's kind of hard to follow
+// TODO: missing case for removing projects/images/tests
 
 describe('ILM', function() {
     it('should have a title', function() {
         // TODO: this port might change in the future or could be random in CI environment
-        browser.get('http://'+process.env.DOCKER_HOST+':8082');
+        browser.get('http://'+process.env.SHIPYARD_HOST);
         expect(browser.getTitle()).toEqual('shipyard');
     });
 
@@ -176,8 +177,9 @@ describe('ILM', function() {
     it('should be able to run the test', function() {
         browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.editProjectBuildButtons.row(0)), 60000));
         // Click the play icon for the test
-        element(sy.editProjectBuildButtons.row(0))
-            .element(by.css('i[class="play icon"]')).click();
+        var buildButton = element(sy.editProjectBuildButtons.row(0));
+        browser.wait(protractor.ExpectedConditions.visibilityOf(buildButton.element(by.css('i[class="play icon"]'))), 60000);
+        buildButton.element(by.css('i[class="play icon"]')).click();
         // Wait for status messages / test to build
         browser.wait(protractor.ExpectedConditions.visibilityOf($(sy.editProjectLoadingMsgCSS)), 60000);
         // In this case, we expect the test to fail
