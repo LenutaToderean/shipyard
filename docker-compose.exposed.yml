@@ -5,12 +5,10 @@ services:
       env_file: .env
       restart: always
       image: rethinkdb:2.2
-      ports:
+      expose:
           - "8080"
           - "28015"
           - "29015"
-      networks:
-        - ui_test
 
   proxy:
       env_file: .env
@@ -18,20 +16,16 @@ services:
       image: ehazlett/docker-proxy:latest
       volumes:
           - "/var/run/docker.sock:/var/run/docker.sock"
-      ports:
+      expose:
           - "2375"
       command: -D
-      networks:
-        - ui_test
   swarm:
       env_file: .env
       restart: always
       image: swarm:1.2.0
       command: m --host tcp://0.0.0.0:2375 proxy:2375
-      ports:
+      expose:
           - "2375"
-      networks:
-        - ui_test
 
   controller:
       env_file: .env
@@ -39,19 +33,20 @@ services:
       build:
         context: .
         dockerfile: Dockerfile.build
+        args:
+          http_proxy: ${http_proxy}
+          https_proxy: ${http_proxy}
       entrypoint: /bin/bash
       command: -c "make all && ./shipyard -D server --rethinkdb-addr rethinkdb:28015 -d tcp://swarm:2375"
       volumes:
           - .:/go/src/github.com/shipyard/shipyard
       volumes_from:
           - proxy
-      ports:
+      expose:
           - "8080"
           - "9279"
       depends_on:
         - rethinkdb
-      networks:
-        - ui_test
 
   postgres:
     hostname: postgres
@@ -61,10 +56,8 @@ services:
       - POSTGRES_PASSWORD=postgres
     volumes:
      - /tmp/postgres:/var/lib/postgresql/data/pgdata
-    ports:
+    expose:
      - "5432"
-    networks:
-      - ui_test
 
   clair:
     env_file: .env
@@ -74,14 +67,9 @@ services:
       - /tmp/clair-data:/tmp
     entrypoint: /bin/bash
     command: -c "sleep 30 && clair --config=/config/config.yaml"
-    ports:
+    expose:
      - "6060"
      - "6061"
     depends_on:
       - postgres
       - controller
-    networks:
-      - ui_test
-
-networks:
-  ui_test:

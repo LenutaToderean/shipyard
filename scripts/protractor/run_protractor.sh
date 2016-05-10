@@ -8,8 +8,6 @@ sudo docker run \
     --net=${SHIPYARD_NETWORK} \
     -e SHIPYARD_HOST=${SHIPYARD_HOST}:${SHIPYARD_PORT} \
     --rm \
-    -e http_proxy=$http_proxy \
-    -e no_proxy=$no_proxy \
     -v /dev/shm:/dev/shm \
     -v $(pwd):/protractor \
     webnicer/protractor-headless conf.js
