@@ -5,8 +5,8 @@
         .module('shipyard.projects')
         .controller('EditController', EditController);
 
-    EditController.$inject = ['resolvedProject', '$scope', 'ProjectService', 'RegistryService', '$state'];
-    function EditController(resolvedProject, $scope, ProjectService, RegistryService, $state) {
+    EditController.$inject = ['$rootScope', 'resolvedProject', '$scope', 'ProjectService', 'RegistryService', '$state'];
+    function EditController($rootScope, resolvedProject, $scope, ProjectService, RegistryService, $state) {
         var vm = this;
 
         vm.project = resolvedProject;
@@ -123,6 +123,30 @@
             return text;
         }
 
+        $(".ui.fullscreen.modal.transition.create.image").on('keyup',function(evt) {
+            if (evt.keyCode == 27) {
+                $(".ui.fullscreen.modal.transition.create.image").modal('hide');
+            }
+        });
+
+        $(".ui.fullscreen.modal.transition.edit.image").on('keyup',function(evt) {
+            if (evt.keyCode == 27) {
+                $(".ui.fullscreen.modal.transition.edit.image").modal('hide');
+            }
+        });
+
+        $(".ui.fullscreen.modal.transition.create.test").on('keyup',function(evt) {
+            if (evt.keyCode == 27) {
+                $(".ui.fullscreen.modal.transition.create.test").modal('hide');
+            }
+        });
+
+        $(".ui.fullscreen.modal.transition.edit.test").on('keyup',function(evt) {
+            if (evt.keyCode == 27) {
+                $(".ui.fullscreen.modal.transition.edit.test").modal('hide');
+            }
+        });
+
         $scope.$on('ngRepeatFinished', function() {
             $('.ui.sortable.celled.table').tablesort();
         });
@@ -134,6 +158,7 @@
                     count += 1;
                 }
             });
+            vm.interceptorBuff = $rootScope.skipSpinnerInterceptorList;
             vm.selectedItemCount = count;
         });
 
@@ -499,7 +524,7 @@
         function showImageEditDialog(image) {
             vm.editImage = $.extend(true, {}, image);
             vm.selectedEditImage = image;
-            vm.buttonStyle = "positive";
+            vm.buttonStyle = "disabled";
             vm.randomEditId = vm.editImage.id;
             vm.editImageTagSpin = true;
             $('#editImageTagDefault').html(image.tag);
@@ -515,13 +540,15 @@
                             vm.editImage.tagLayer = tagObject.layer;
                             vm.publicRegistryTags = data;
                         }
+                        checkImagePublicRepository(image);
+                        vm.editImageTagSpin = false;
+                        vm.buttonStyle = "positive";
                         vm.editImage.additionalTags = [];
                         $.each(vm.publicRegistryTags, function(index,item) {
                             if(vm.publicRegistryTags[index].layer === vm.editImage.tagLayer) {
                                 vm.editImage.additionalTags.push(vm.publicRegistryTags[index].name);
                             }
                         });
-                        vm.editImageTagSpin = false;
                     }, function(data) {
                         vm.error = data;
                     });
@@ -529,6 +556,7 @@
             if(image.location === "Shipyard Registry") {
                 getShipyardImages(image.registryId);
                 vm.editImageTagSpin = false;
+                vm.buttonStyle = "positive";
             }
             $('#edit-project-image-edit-modal-'+vm.randomEditId)
                 .modal({
@@ -843,7 +871,7 @@
             if (builds[testId].status === 'finished_failed') {
                 return 'finished_failed';
             }
-        }
+         }
 
         function cancelCreateSaveImage() {
             if (!ProjectService.cancelGetPublicRegistryTags()) {

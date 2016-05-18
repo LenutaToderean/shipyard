@@ -20,7 +20,7 @@
 <div id="edit-project-delete-test-modal" class="ui small modal transition">
     <i class="close icon"></i>
     <div class="header">
-        Delete Test: {{ vm.selectedTest.id | limitTo:12 }}
+        Delete Test: {{ vm.selectedTest.name | limitTo:12 }}
     </div>
     <div class="content">
         <p>Are you sure you want to delete this test?</p>
@@ -52,18 +52,18 @@
                                 <li ng-show="!vm.createImage.tag">Choose Tag from the dropdown.</li>
                             </ul>
                         </div>
-                        <h5 style="display: inline">Image Configuration&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
-                        <div class="ui toggle checkbox" ng-click="vm.createImage.skipImageBuild=!vm.createImage.skipImageBuild">
-                            <input type="checkbox" name="public" ng-model="vm.createImage.skipImageBuild">
-                            <label>Disable image verification</label>
-                        </div>
-                        <i class="blue help circle icon"></i>
-                        <div class="ui popup" style="max-width: 450px;">
-                            <h5>Disable image verification</h5>
-                            <p>Click the slider to disable image verification.</p>
-                        </div>
                         <div class="ui two column grid">
                             <div class="column">
+                                <h5 style="display: inline">Image Configuration&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
+                                <div class="ui toggle checkbox" ng-click="vm.createImage.skipImageBuild=!vm.createImage.skipImageBuild">
+                                    <input type="checkbox" name="public" ng-model="vm.createImage.skipImageBuild">
+                                    <label>Disable image verification</label>
+                                </div>
+                                <i class="blue help circle icon"></i>
+                                <div class="ui popup" style="max-width: 450px;">
+                                    <p ng-if="!vm.createImage.skipImageBuild">Click the slider to disable image verification.</p>
+                                    <p ng-if="vm.createImage.skipImageBuild">Click the slider to enable image verification.</p>
+                                </div>
 
                                 <div class="fields">
                                     <div class="four wide field">
@@ -185,6 +185,8 @@
 
                             <div class="column">
 
+                                <label>&nbsp;</label>
+
                                 <div class="field">
                                     <label>Image Description</label>
                                     <input name="description" class="input" type="text" ng-model="vm.createImage.description" placeholder="Add Description" />
@@ -213,7 +215,7 @@
     </div>
 </div>
 
-<div id="edit-project-image-edit-modal-{{vm.randomEditId}}" class="ui fullscreen modal transition">
+<div id="edit-project-image-edit-modal-{{vm.randomEditId}}" class="ui fullscreen modal transition edit image">
     <i class="close icon"></i>
     <div class="header">
         {{ vm.editImage.name }}
@@ -223,18 +225,20 @@
             <div class="row">
                 <div class="column">
                     <div class="ui form">
-                        <h5 style="display: inline">Image Configuration&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
-                        <div class="ui toggle checkbox" ng-click="vm.editImage.skipImageBuild=!vm.editImage.skipImageBuild">
-                            <input type="checkbox" name="public" ng-model="vm.editImage.skipImageBuild">
-                            <label>Disable image verification</label>
-                        </div>
-                        <i class="blue help circle icon"></i>
-                        <div class="ui popup" style="max-width: 450px;">
-                            <h5>Disable image verification</h5>
-                            <p>Click the slider to disable image verification.</p>
-                        </div>
                         <div class="ui two column grid">
                             <div class="column">
+                                <h5 style="display: inline">Image Configuration&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
+                                <div class="ui toggle checkbox" ng-click="vm.editImage.skipImageBuild=!vm.editImage.skipImageBuild">
+                                    <input type="checkbox" name="public" ng-model="vm.editImage.skipImageBuild">
+                                    <label>Disable image verification</label>
+                                </div>
+                                <i class="blue help circle icon"></i>
+                                <div class="ui popup" style="max-width: 450px;">
+                                    <p ng-if="!vm.editImage.skipImageBuild">Click the slider to disable image verification.</p>
+                                    <p ng-if="vm.editImage.skipImageBuild">Click the slider to enable image verification.</p>
+                                </div>
+                        <!--<div class="ui two column grid">
+                            <div class="column">-->
 
                                 <div class="fields">
                                     <div class="four wide field">
@@ -285,7 +289,7 @@
                                     </div>
                                     <div ng-show="vm.editImage.location === 'Public Registry'" class="four wide field">
                                         <label>Tag</label>
-                                        <div class="ui selection fluid dropdown edit tag" id="editImageTag">
+                                        <div class="ui fluid search selection dropdown edit tag">
                                             <input type="hidden" name="tag">
                                             <i ng-if="!vm.editImageTagSpin" class="dropdown icon"></i>
                                             <i ng-if="vm.editImageTagSpin" class="repeat icon spin" aria-hidden="true" style="float: right; position: relative; width: auto; font-size: 0.85714286; margin: 0em 0em 0em 1em;"></i>
@@ -350,6 +354,8 @@
 
                             <div class="column">
 
+                                <label>&nbsp;</label>
+
                                 <div class="field">
                                     <label>Image Description</label>
                                     <input name="description" class="input" type="text" ng-model="vm.editImage.description" placeholder="{{vm.editImage.description}}" />
@@ -389,18 +395,20 @@
             <div class="row">
                 <div class="column">
                     <div class="ui form">
-                        <h5 style="display: inline">Test Configuration&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
-                        <div class="ui toggle checkbox" ng-click="vm.createTest.skipTest=!vm.createTest.skipTest">
-                            <input type="checkbox" name="public" ng-model="vm.createTest.skipTest">
-                            <label>Disable test verification</label>
-                        </div>
-                        <i class="blue help circle icon"></i>
-                        <div class="ui popup" style="max-width: 450px;">
-                            <h5>Disable test verification</h5>
-                            <p>Click the slider to disable test verification.</p>
-                        </div>
                         <div class="ui two column grid">
                             <div class="column">
+                            <h5 style="display: inline">Test Configuration&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
+                            <div class="ui toggle checkbox" ng-click="vm.createTest.skipTest=!vm.createTest.skipTest">
+                                <input type="checkbox" name="public" ng-model="vm.createTest.skipTest">
+                                <label>Disable test verification</label>
+                            </div>
+                            <i class="blue help circle icon"></i>
+                            <div class="ui popup" style="max-width: 450px;">
+                                <p ng-if="!vm.createTest.skipTest">Click the slider to disable test verification.</p>
+                                <p ng-if="vm.createTest.skipTest">Click the slider to enable test verification.</p>
+                            </div>
+                        <!--<div class="ui two column grid">
+                            <div class="column">-->
 
                                 <div class="fields">
                                     <div class="five wide field">
@@ -491,6 +499,8 @@
 
                             <div class="column" style="overflow-y:scroll; height:340px;">
 
+                                <label>&nbsp;</label>
+
                                 <div class="fields">
                                     <div class="seven wide field">
                                         <label>Parameters <i class="blue help circle icon parameters"></i>
@@ -548,7 +558,7 @@
     </div>
 </div>
 
-<div id="edit-project-test-edit-modal-{{vm.randomEditTestId}}" class="ui fullscreen modal transition">
+<div id="edit-project-test-edit-modal-{{vm.randomEditTestId}}" class="ui fullscreen modal transition edit test">
     <i class="close icon"></i>
     <div class="header">
         {{vm.editTest.name}}
@@ -558,18 +568,20 @@
             <div class="row">
                 <div class="column">
                     <div class="ui form">
-                        <h5 style="display: inline">Test Configuration&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
-                        <div class="ui toggle checkbox" ng-click="vm.editTest.skipTest=!vm.editTest.skipTest">
-                            <input type="checkbox" name="public" ng-model="vm.editTest.skipTest">
-                            <label>Disable test verification</label>
-                        </div>
-                        <i class="blue help circle icon"></i>
-                        <div class="ui popup" style="max-width: 450px;">
-                            <h5>Disable test verification</h5>
-                            <p>Click the slider to disable test verification.</p>
-                        </div>
                         <div class="ui two column grid">
                             <div class="column">
+                                <h5 style="display: inline">Test Configuration&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>
+                                <div class="ui toggle checkbox" ng-click="vm.editTest.skipTest=!vm.editTest.skipTest">
+                                    <input type="checkbox" name="public" ng-model="vm.editTest.skipTest">
+                                    <label>Disable test verification</label>
+                                </div>
+                                <i class="blue help circle icon"></i>
+                                <div class="ui popup" style="max-width: 450px;">
+                                    <p ng-if="!vm.editTest.skipTest">Click the slider to disable test verification.</p>
+                                    <p ng-if="vm.editTest.skipTest">Click the slider to enable test verification.</p>
+                                </div>
+                        <!--<div class="ui two column grid">
+                            <div class="column">-->
 
                                 <div class="fields">
                                     <div class="five wide field">
@@ -657,6 +669,8 @@
                             </div>
 
                             <div class="column" style="overflow-y:scroll; height:340px;">
+
+                                <label>&nbsp;</label>
 
                                 <div class="fields">
                                     <div class="seven wide field">
@@ -770,9 +784,12 @@
                             <div class="ui column grid">
                                 <div class="column">
                                     <h5 class="ui dividing header">Project Configuration</h5>
-                                    <div class="six fields">
+                                    <div class="five fields">
                                         <div class="field">
                                             <label>Project ID <span style="font-weight: normal">{{vm.project.id || '...'}}</span></label>
+                                        </div>
+                                        <div class="field">
+                                            <label># of Tests Running in BG: <span style="font-weight: normal">{{vm.interceptorBuff.length}}</span></label>
                                         </div>
                                     </div>
                                     <div class="five fields">
@@ -844,8 +861,8 @@
                                             </div>
                                             <i class="blue help circle icon"></i>
                                             <div class="ui popup" style="max-width: 450px;">
-                                                <h5>Disable image verification</h5>
-                                                <p>Click the slider to disable image verification.</p>
+                                                <p ng-if="!vm.skipImages">Click the slider to disable image verification.</p>
+                                                <p ng-if="vm.skipImages">Click the slider to enable image verification.</p>
                                             </div>
                                         </div>
                                     </div>
@@ -913,8 +930,8 @@
                                             </div>
                                             <i class="blue help circle icon"></i>
                                             <div class="ui popup" style="max-width: 450px;">
-                                                <h5>Disable test verification</h5>
-                                                <p>Click the slider to disable test verification.</p>
+                                                <p ng-if="!vm.skipTests">Click the slider to disable test verification.</p>
+                                                <p ng-if="vm.skipTests">Click the slider to enable test verification.</p>
                                             </div>
                                         </div>
                                     </div>
