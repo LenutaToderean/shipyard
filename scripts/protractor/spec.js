@@ -57,32 +57,38 @@ var sy = {
 
 describe('ILM', function() {
     it('should have a title', function() {
+        console.log("check title");
         // TODO: this port might change in the future or could be random in CI environment
         browser.get('http://'+process.env.SHIPYARD_HOST);
         expect(browser.getTitle()).toEqual('shipyard');
     });
 
     it('should be able to login', function() {
+        console.log("login into shipyard");
         element(sy.usernameInputField).sendKeys('admin ');
         element(sy.passwordInputField).sendKeys('shipyard');
         element(sy.loginSubmitButton).click();
     });
 
     it('should be able to navigate to project list', function() {
+        console.log("navigate to project list view");
         element(sy.ilmButton).click();
     });
 
     it('should be able to navigate to the project create view', function() {
+        console.log("navigate to project create view");
         element(sy.createNewProjectButton).click();
     });
     
     it('should be able to create a new project', function() {
+        console.log("create a new project");
         element(sy.createProjectName).sendKeys(config.projectName);
         element(sy.createProjectDescription).sendKeys('Description1');
         element(sy.createProjectButton).click();
     });
 
     it('project should be successfully created', function() {
+        console.log("check if the project was successfully created");
         expect(
             element(sy.editProjectHeader).getText()
         ).toEqual(
@@ -103,6 +109,7 @@ describe('ILM', function() {
     });
 
     it('should be able to modify an existing project', function() {
+        console.log("modify an existing project");
         expect(element(sy.saveProjectButton).getAttribute('class')).toEqual('ui small disabled button');
         element(sy.editProjectName).clear();
         element(sy.editProjectName).sendKeys(config.projectNameOnEdit);
@@ -114,7 +121,8 @@ describe('ILM', function() {
         );
     });
 
-    it('should open modal window for create image', function() {
+    it('should open modal window for add image', function() {
+        console.log("open modal window for add image");
         element(sy.createNewImageButton).click();
         browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.createImageModal)), 60000);
         expect(element(sy.createImageModal).isDisplayed()).toBe(true);
@@ -122,6 +130,7 @@ describe('ILM', function() {
     });
 
     it('should add new image from public registry', function() {
+        console.log("add new image from public registry");
         browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.createImageLocation), 60000));
         element(sy.createImageLocation).click();
         browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.createImageLocationPublicReg), 60000));
@@ -144,6 +153,7 @@ describe('ILM', function() {
     });
 
     it('should open the tests modal window', function() {
+        console.log("open the add test modal window");
         browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.createNewTestButton), 60000));
         browser.wait(protractor.ExpectedConditions.elementToBeClickable(element(sy.createNewTestButton), 60000));
         element(sy.createNewTestButton).click();
@@ -154,6 +164,7 @@ describe('ILM', function() {
     });
     
     it('should add new test that references the image', function() {
+        console.log("add new test that references the image");
         browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.createTestProviderDropdown), 60000));
         element(sy.createTestProviderDropdown).click();
         browser.wait(protractor.until.elementLocated(sy.createTestProviderMenuTransitioner), 60000);
@@ -175,6 +186,7 @@ describe('ILM', function() {
     });
     
     it('should be able to run the test', function() {
+        console.log("run the test");
         browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.editProjectBuildButtons.row(0)), 60000));
         // Click the play icon for the test
         var buildButton = element(sy.editProjectBuildButtons.row(0));
@@ -189,6 +201,7 @@ describe('ILM', function() {
     });
     
     it('should be able return to project listing via the `Go To Projects` icon', function() {
+        console.log("return to the project listing using the 'Go To Projects' action item");
         browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.editProjectGoToProjectsButton), 60000));
         // Click the `Go To Projects` button
         element(sy.editProjectGoToProjectsButton).click();
@@ -198,6 +211,7 @@ describe('ILM', function() {
     });
     
     it('should be able to enter the project"s inspect view', function() {
+        console.log("enter the project's inspect view");
         browser.wait(protractor.ExpectedConditions.visibilityOf(element.all(sy.projectListTableOfProjects).get(-1), 60000));
         // Click the `inspect` button for the project
         element.all(sy.projectListTableOfProjects).get(-1)
@@ -209,6 +223,7 @@ describe('ILM', function() {
     });
     
     it('should have the build we just ran', function() {
+        console.log("check the build that we ran");
         browser.wait(protractor.ExpectedConditions.visibilityOf(element.all(sy.inspectViewBuilds).get(-1), 60000));
         // Click the `inspect` button for the project
         var lastBuild = element.all(sy.inspectViewBuilds).get(-1);
