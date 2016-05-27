@@ -11,6 +11,7 @@ var sy = {
     passwordInputField: by.model('vm.password'),
     loginSubmitButton: by.css('.ui.blue.submit.button'),
     ilmButton: by.id('ilm-button'),
+    logoProjectListView: by.id('logo-project-view'),
     createNewProjectButton: by.id('create-new-project-button'),
     createProjectButton: by.id('create-project-button'),
     createProjectName: by.id('create-project-name'),
@@ -75,6 +76,11 @@ describe('ILM', function() {
         element(sy.ilmButton).click();
     });
 
+    it('should have a logo', function() {
+        console.log("check logo");
+        expect(element(sy.logoProjectListView).isDisplayed()).toBeTruthy();
+    });
+
     it('should be able to navigate to the project create view', function() {
         console.log("navigate to project create view");
         element(sy.createNewProjectButton).click();
@@ -126,7 +132,7 @@ describe('ILM', function() {
         element(sy.createNewImageButton).click();
         browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.createImageModal)), 60000);
         expect(element(sy.createImageModal).isDisplayed()).toBe(true);
-        expect(element(sy.createImageHeader).getText()).toEqual('Create Image');
+        expect(element(sy.createImageHeader).getText()).toEqual('Add Image');
     });
 
     it('should add new image from public registry', function() {
@@ -155,12 +161,12 @@ describe('ILM', function() {
     it('should open the tests modal window', function() {
         console.log("open the add test modal window");
         browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.createNewTestButton), 60000));
-        browser.wait(protractor.ExpectedConditions.elementToBeClickable(element(sy.createNewTestButton), 60000));
+        //browser.wait(protractor.ExpectedConditions.elementToBeClickable(element(sy.createNewTestButton), 60000));
         element(sy.createNewTestButton).click();
         browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.createTestModal), 60000));
         expect(element(sy.createTestModal).isDisplayed()).toBe(true);
-        browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.createTestHeader), 60000));
-        expect(element(sy.createTestHeader).getText()).toEqual('Create Test');
+        //browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.createTestHeader), 60000));
+        expect(element(sy.createTestHeader).getText()).toEqual('Add Test');
     });
     
     it('should add new test that references the image', function() {
