@@ -39,7 +39,7 @@
 <div id="edit-project-image-create-modal-{{vm.randomCreateId}}" class="ui fullscreen modal transition create image">
     <i class="close icon"></i>
     <div class="header" id="create-image-header">
-        Create Image
+        Add Image
     </div>
     <div class="content">
         <div class="ui grid">
@@ -387,8 +387,13 @@
 
 <div id="edit-project-test-create-modal-{{vm.randomCreateTestId}}" class="ui fullscreen modal transition create test">
     <i class="close icon"></i>
+<<<<<<< HEAD
     <div class="header" id="create-test-header">
         Create Test
+=======
+    <div class="header">
+        Add Test
+>>>>>>> 8c6200d658aa164bc50cae5638f184e3e64ad412
     </div>
     <div class="content">
         <div class="ui grid">
@@ -413,7 +418,7 @@
                                 <div class="fields">
                                     <div class="five wide field">
                                         <label>Test Provider</label>
-                                        <select name="testProvider" ng-model="vm.createTest.provider.providerType" class="ui search fluid dropdown testProvider" ng-change="vm.resetTestValues()">
+                                        <select name="testProvider" ng-model="vm.createTest.provider.providerType" class="ui search fluid dropdown testProvider">
                                             <option value="">Select</option>
                                             <option value="Predefined Provider">Predefined Provider</option>
                                             <option value="Clair [Internal]">Clair [Internal]</option>
@@ -551,7 +556,11 @@
         <div class="ui negative button">
             Cancel
         </div>
+<<<<<<< HEAD
         <div id="test-create-save-button" ng-click="vm.createSaveTest(vm.createTest)" class="ui positive right labeled icon button {{vm.buttonStyle}}">
+=======
+        <div ng-click="vm.createSaveTest(vm.createTest)" class="ui positive right labeled icon button">
+>>>>>>> 8c6200d658aa164bc50cae5638f184e3e64ad412
             Save Test
             <i class="save icon"></i>
         </div>
@@ -764,6 +773,9 @@
             </div>
             <div class="ui segment page">
                 <div class="ui grid">
+                    <span style="float: right">
+                        <img src="app/ILM Logo_72.png" style="height:60px; width:200px"/>
+                    </span>
                     <div class="column row">
                         <div class="column">
                             <h3 class="ui header">
@@ -771,7 +783,7 @@
                                     <a ui-sref="dashboard.projects" style="color: #006D95">Go To Projects <i class="sign out icon"></i></a>
                                 </span>
                                 <div class="content">
-                                    <i class="circle icon" ng-class="vm.project.status == 'Published' ? 'green' : vm.project.status == 'Tested' ? 'yellow' : 'red'"></i>
+                                    <i class="circle icon" ng-class="vm.project.status == 'Published' ? 'green' : vm.project.status == 'Tested' ? 'grey' : 'red'"></i>
                                     <span id="edit-project-header">Project {{vm.project.name}}</span>
                                     <i class="ui edit icon"></i>
                                 </div>

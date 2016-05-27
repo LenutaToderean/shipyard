@@ -2,14 +2,14 @@
     <a class="item" style="background-color: #006E93">
         <h4 class="ui header" style="color: white"><i class="clock icon"></i>Project History For:</h4>
         <h4 class="ui header" style="color: white">
-            <i class="circle icon" ng-class="vm.project.status == 'Published' ? 'green' : vm.project.status == 'Tested' ? 'yellow' : 'red'"></i>
+            <i class="circle icon" ng-class="vm.project.status == 'Published' ? 'green' : vm.project.status == 'Tested' ? 'grey' : 'red'"></i>
             {{vm.results.projectId}}
         </h4>
     </a>
     <div class="item">
         <div class="column" style="overflow-y:scroll; height: 550px">
         <div class="active item">
-            <i class="circle icon" ng-class="vm.project.status == 'Published' ? 'green' : vm.project.status == 'Tested' ? 'yellow' : 'red'"></i>{{vm.results.buildId}}
+            <i class="circle icon" ng-class="vm.project.status == 'Published' ? 'green' : vm.project.status == 'Tested' ? 'grey' : 'red'"></i>{{vm.results.buildId}}
         </div>
         </div>
     </div>
@@ -24,17 +24,26 @@
         <div class="column">
             <div class="ui segment page">
                 <div class="ui grid">
+                    <span style="float: right">
+                        <img src="app/ILM Logo_72.png" style="height:60px; width:200px"/>
+                    </span>
                     <div class="column row">
                         <div class="column">
                             <div ng-click="vm.showProjectHistory()" class="ui small blue labeled icon button">
                                 <i class="clock icon"></i> Project History
                             </div>
+                            <span ng-show="!vm.refresh" style="float: right">
+                                <a ng-click="vm.startRefresh(vm.results.projectId)" style="color: #006D95; cursor: pointer; font-weight: bold">Auto Refresh <i class="refresh icon"></i></a>
+                            </span>
+                            <span ng-show="vm.refresh" style="float: right">
+                                <a ng-click="vm.cancelRefresh()" style="color: darkgray; cursor: pointer; font-weight: bold">Auto Refresh <i class="stop icon"></i></a>
+                            </span>
                             <h3 class="ui header">
                                 <span style="float: right">
                                     <a ui-sref="dashboard.projects" style="color: #006D95">Go To Projects <i class="sign out icon"></i></a>
                                 </span>
                                 <div class="content">
-                                    <i class="circle icon" ng-class="vm.project.status == 'Published' ? 'green' : vm.project.status == 'Tested' ? 'yellow' : 'red'"></i>
+                                    <i class="circle icon" ng-class="vm.project.status == 'Published' ? 'green' : vm.project.status == 'Tested' ? 'grey' : 'red'"></i>
                                     Project Results
                                 </div>
                             </h3>
@@ -85,6 +94,17 @@
                                             <label>Last Update Name: <span style="font-weight: normal">{{vm.results.updater || '...'}}</span></label>
                                         </div>
                                     </div>
+                                    <div class="field">
+                                        <div class="row">
+                                            <div class="column">
+                                                <a ui-sref='dashboard.edit_project({id:vm.results.projectId})'>
+                                                    <div id="edit-project" class="ui small button">
+                                                        Edit Project
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -123,7 +143,12 @@
                                         </td>
                                         <td id="inspect-view-test-id">{{test.testId | limitTo:12}}</td>
                                         <td id="inspect-view-build-id">{{test.buildId | limitTo:12}}</td>
-                                        <td id="inspect-view-blocker">{{test.blocker}}</td>
+                                        <td id="inspect-view-blocker">
+                                            <div class="ui toggle checkbox">
+                                                <input type="checkbox" name="blocker" ng-model="test.blocker" disabled>
+                                                <label></label>
+                                            </div>
+                                        </td>
                                         <td id="inspect-view-test-name">{{test.testName}}</td>
                                         <td id="inspect-view-image-name">{{test.imageName}}</td>
                                         <td id="inspect-view-docker-image-id">{{test.dockerImageId | limitTo:12}}</td>

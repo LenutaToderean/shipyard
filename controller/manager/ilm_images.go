@@ -8,8 +8,8 @@ import (
 	"github.com/samalba/dockerclient"
 	apiClient "github.com/shipyard/shipyard/client"
 	"github.com/shipyard/shipyard/model"
-	"sort"
 	"time"
+	"strings"
 )
 
 var (
@@ -18,10 +18,7 @@ var (
 )
 
 // check if an image exists
-func (m DefaultManager) VerifyIfImageExistsLocally(imageToCheck string) bool {
-
-	//images, err := m.client.ListImages(true)
-
+func (m DefaultManager) VerifyIfImageExistsLocally(image model.Image) bool {
 	images, err := apiClient.GetLocalImages(m.DockerClient().URL.String())
 
 	if err != nil {
@@ -32,8 +29,8 @@ func (m DefaultManager) VerifyIfImageExistsLocally(imageToCheck string) bool {
 	for _, img := range images {
 		imageRepoTags := img.RepoTags
 		for _, imageRepoTag := range imageRepoTags {
-			if imageRepoTag == imageToCheck {
-				fmt.Printf("Image %s exists locally as %s \n", imageToCheck, imageRepoTag)
+			if imageRepoTag == image.PullableName() {
+				fmt.Printf("Image %s exists locally as %s \n", image.PullableName(), imageRepoTag)
 				return true
 			}
 		}
@@ -42,26 +39,44 @@ func (m DefaultManager) VerifyIfImageExistsLocally(imageToCheck string) bool {
 	return false
 }
 
-func (m DefaultManager) PullImage(pullableImageName string, username, password string) error {
-	if pullableImageName == "" {
-		return ErrImageWasEmpty
+// Checks to see if the given image is available locally.
+// If it's not, it pulls the image (registry is defined by image.PullableName()).
+// If it is, it skips the pull.
+func (m DefaultManager) PullImage(image model.Image) error {
+
+	// Check to see if the image exists locally, if not, try to pull it.
+	if m.VerifyIfImageExistsLocally(image) {
+		log.Debug("Image %s exists locally, will not try to pull...", image.PullableName())
+		return nil
 	}
+
+	username := ""
+	password := ""
+	if image.RegistryId != "" {
+		registry, err := m.Registry(image.RegistryId)
+		if err != nil {
+			log.Warnf("Could not find registry %s for image %s", image.RegistryId, image.ID)
+		} else {
+			username = registry.Username
+			password = registry.Password
+		}
+	}
+
 	auth := dockerclient.AuthConfig{username, password, ""}
 
-	fmt.Printf("Image does not exist locally. Pulling image %s ... \n", pullableImageName)
 	ticker := time.NewTicker(time.Second * 15)
 	go func() {
 		for t := range ticker.C {
 			fmt.Print("Time: ", t.UTC())
-			fmt.Printf(" Pulling image: %s. Please be patient while the process finishes ... \n", pullableImageName)
+			fmt.Printf(" Pulling image: %s. Please be patient while the process finishes ... \n", image.PullableName())
 		}
 	}()
 
 	// TODO: stop using samalba/dockerclient, use Docker, Inc docker engine client library instead
-	err := m.client.PullImage(pullableImageName, &auth)
+	err := m.client.PullImage(image.PullableName(), &auth)
 
 	if err != nil {
-		fmt.Printf("Could not pull image %s ... \n %s \n", pullableImageName, err)
+		fmt.Printf("Could not pull image %s ... \n %s \n", image.PullableName(), err)
 		ticker.Stop()
 		return err
 	}
@@ -74,6 +89,7 @@ func (m DefaultManager) PullImage(pullableImageName string, username, password s
 func (m DefaultManager) GetImages(projectId string) ([]*model.Image, error) {
 
 	res, err := r.Table(tblNameImages).Filter(map[string]string{"projectId": projectId}).Run(m.session)
+	defer res.Close()
 	if err != nil {
 		return nil, err
 	}
@@ -91,6 +107,7 @@ func (m DefaultManager) GetImages(projectId string) ([]*model.Image, error) {
 func (m DefaultManager) GetImage(projectId string, imageId string) (*model.Image, error) {
 	var image *model.Image
 	res, err := r.Table(tblNameImages).Filter(map[string]string{"id": imageId}).Run(m.session)
+	defer res.Close()
 	if err != nil {
 		return nil, err
 	}
@@ -175,42 +192,56 @@ func (m DefaultManager) UpdateImage(projectId string, image *model.Image) error 
 	return nil
 }
 
+// Sets the on_success|on_failure tag for the given ilm image and
+// performs a `docker tag` to reflect the changes
 func (m DefaultManager) UpdateImageIlmTags(projectId string, imageId string, ilmTag string) error {
-	var eventType string
 	// check if exists; if so, update
-	rez, err := m.GetImage(projectId, imageId)
+	image, err := m.GetImage(projectId, imageId)
 	if err != nil && err != ErrImageDoesNotExist {
 		return err
 	}
 
-	if rez == nil {
+	if image == nil {
 		return ErrImageDoesNotExist
 	}
 
-	//sort.Sort(rez.IlmTags)
-	sort.Strings(rez.IlmTags)
-	index := sort.SearchStrings(rez.IlmTags, ilmTag)
-	if len(rez.IlmTags) == index {
-		log.Infof("ilm tag %s was NOT found in array %v, appending", ilmTag, rez.IlmTags)
-		rez.IlmTags = append(rez.IlmTags, ilmTag)
-	}
+	// Set the ilm tag to the given image
+	image.IlmTags = []string{ilmTag}
 
-	if _, err := r.Table(tblNameImages).Filter(map[string]string{"id": imageId}).Update(rez).RunWrite(m.session); err != nil {
+	// TODO: cleanup of old tags
+	// Tag the image. Analogous to `docker tag`
+	imagePullableFormat := image.PullableName()
+	imageRepoFormat := strings.Replace(
+		imagePullableFormat,
+		fmt.Sprintf(":%s", image.Tag),
+		"",
+		1,
+	)
+	err = m.client.TagImage(
+		imagePullableFormat,
+		imageRepoFormat,
+		ilmTag,
+		true,
+	)
+
+	if err != nil {
+		log.Debugf("Could not apply success tag (%s) to image %s", ilmTag, image.PullableName())
 		return err
 	}
 
-	eventType = "update-image"
+	if _, err := r.Table(tblNameImages).Filter(map[string]string{"id": imageId}).Update(image).RunWrite(m.session); err != nil {
+		return err
+	}
 
-	m.logEvent(eventType, fmt.Sprintf("id=%s", imageId), []string{"security"})
 	return nil
 }
 
 func (m DefaultManager) DeleteImage(projectId string, imageId string) error {
 	res, err := r.Table(tblNameImages).Filter(map[string]string{"id": imageId}).Delete().Run(m.session)
+	defer res.Close()
 	if err != nil {
 		return err
 	}
-
 	if res.IsNil() {
 		return ErrImageDoesNotExist
 	}
@@ -221,8 +252,8 @@ func (m DefaultManager) DeleteImage(projectId string, imageId string) error {
 }
 
 func (m DefaultManager) DeleteAllImages() error {
-	_, err := r.Table(tblNameImages).Delete().Run(m.session)
-
+	res, err := r.Table(tblNameImages).Delete().Run(m.session)
+	defer res.Close()
 	if err != nil {
 		return err
 	}
