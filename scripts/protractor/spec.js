@@ -50,7 +50,9 @@ var sy = {
     editProjectGoToProjectsButton: by.css('#content > div.ui.padded.grid.ng-scope > div > div > div.ui.segment.page > div > div.column.row > div > h3 > span > a'),
     projectListTableOfProjects: by.repeater('a in filteredProjects = (vm.projects | filter:tableFilter)'),
     inspectViewBuilds: by.repeater('test in vm.results.testResults'),
-    inspectViewTestName: by.id('inspect-view-test-name')
+    inspectViewTestName: by.id('inspect-view-test-name'),
+    inspectViewMagnifyingGlass: by.id('inspect-view-test-results'),
+    inspectProjectGoToProjectsButton: by.id('inspect-go-to-projects')
 };
 
 // TODO: Let's try to comment each step. Even with descriptive names, it's kind of hard to follow
@@ -238,6 +240,51 @@ describe('ILM', function() {
         ).toEqual(
             config.testName
         );
+    });
+
+    /*it('should be able to check tests results', function() {
+        console.log("check test results");
+        browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.inspectViewBuilds.row(0)), 60000));
+        var inspectButton = element(sy.inspectViewBuilds.row(0));
+        browser.wait(protractor.ExpectedConditions.visibilityOf(inspectButton.element(by.css('i[class="search icon"]'))), 60000);
+        inspectButton.element(by.css('i[class="search icon"]')).click();
+        /!*browser.wait(protractor.ExpectedConditions.visibilityOf(element.all(sy.inspectViewBuilds).get(-1), 60000));
+        var lastBuild = element.all(sy.inspectViewBuilds).get(-1);
+        expect(lastBuild.element(sy.inspectViewMagnifyingGlass).getAttribute('class')).toBe('basic compact blue ui icon button');
+        element.all(sy.inspectViewBuilds).get(-1)
+            .element(sy.inspectViewMagnifyingGlass).click();
+        var testResultsHeader = element(by.css('.ui.header .content'));
+        browser.wait(protractor.ExpectedConditions.visibilityOf(testResultsHeader, 60000));
+        expect(testResultsHeader.getText()).toEqual('Clair report for image ' + config.imageName + ":" + config.tag);*!/
+    });*/
+
+    it('should be able to go to edit view', function() {
+        console.log("skip to edit project view");
+        browser.wait(protractor.ExpectedConditions.visibilityOf(element(by.id('edit-project')), 60000));
+        expect(element(by.id('edit-project')).getText()).toEqual('Edit Project');
+        element(by.id('edit-project')).click();
+        expect(element(sy.editProjectHeader).getText()).toEqual('Project ' + config.projectNameOnEdit);
+    });
+
+    it('should be able to inspect the test we run', function() {
+        console.log("inspect the results of the test we run");
+        browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.editProjectBuildButtons.row(0)), 60000));
+        var inspectButton = element(sy.editProjectBuildButtons.row(0));
+        browser.wait(protractor.ExpectedConditions.visibilityOf(inspectButton.element(by.css('i[class="search icon"]'))), 60000);
+        inspectButton.element(by.css('i[class="search icon"]')).click();
+        var inspectHeader = element(by.css('.ui.header .content'));
+        browser.wait(protractor.ExpectedConditions.visibilityOf(inspectHeader, 60000));
+        expect(inspectHeader.getText()).toEqual('Project Results');
+    });
+
+    it('should be able return from the inspect view to project listing via the `Go To Projects` icon', function() {
+        console.log("return to the project listing from the inspect view using the 'Go To Projects' action item");
+        browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.inspectProjectGoToProjectsButton), 60000));
+        // Click the `Go To Projects` button
+        element(sy.inspectProjectGoToProjectsButton).click();
+        var projectName = element.all(sy.projectListTableOfProjects).get(-1)
+            .element(by.css('#project-name'));
+        browser.wait(protractor.ExpectedConditions.visibilityOf(projectName, 60000));
     });
 
 });

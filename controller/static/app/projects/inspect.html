@@ -39,7 +39,7 @@
                                 <a ng-click="vm.cancelRefresh()" style="color: darkgray; cursor: pointer; font-weight: bold">Auto Refresh <i class="stop icon"></i></a>
                             </span>
                             <h3 class="ui header">
-                                <span style="float: right">
+                                <span id="inspect-go-to-projects" style="float: right">
                                     <a ui-sref="dashboard.projects" style="color: #006D95">Go To Projects <i class="sign out icon"></i></a>
                                 </span>
                                 <div class="content">
@@ -160,7 +160,7 @@
                                             </div>
                                         </span></td>
                                         <td class="collapsing">
-                                            <div ui-sref="dashboard.buildResults({projectId: vm.results.projectId, testId: test.testId, buildId: test.buildId})" class="basic compact blue ui icon button"  ng-class="{disabled: test.istestResult}">
+                                            <div id="inspect-view-test-results" ui-sref="dashboard.buildResults({projectId: vm.results.projectId, testId: test.testId, buildId: test.buildId})" class="basic compact blue ui icon button"  ng-class="{disabled: test.istestResult}">
                                                 <i class="search icon"></i>
                                             </div>
                                             <div class="basic compact blue ui icon button">
