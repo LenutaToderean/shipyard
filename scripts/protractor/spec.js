@@ -1,7 +1,14 @@
 var config = {
+    registryName: 'local',
+    registryAddress: 'https://myd-vm23183.hpswlabs.adapps.hp.com:5002',
+    registryUsername: 'admin',
+    registryPassword: 'password',
     projectName: 'Selenium Project',
     projectNameOnEdit: 'Selenium Project Edited',
     testName: 'Pied Piper',
+    testTagSuccess: 'success',
+    testTagFailure: 'failure',
+    testDescription: 'test description',
     imageName: 'alpine',
     tag: 'latest'
 };
@@ -10,6 +17,15 @@ var sy = {
     usernameInputField: by.model('vm.username'),
     passwordInputField: by.model('vm.password'),
     loginSubmitButton: by.css('.ui.blue.submit.button'),
+    registriesButton: by.id('registries-button'),
+    addNewRegistry: by.css('.ui.small.green.labeled.icon.button'),
+    addRegistryName: by.model('vm.name'),
+    addRegistryAddress: by.model('vm.addr'),
+    addRegistryUsername: by.model('vm.username'),
+    addRegistryPassword: by.model('vm.password'),
+    addRegistrySkipTLS: by.css('.ui.checkbox'),
+    addRegistryButton: by.css('.ui.green.submit.button'),
+    addRegistryList: by.repeater('r in filteredRegistries = (vm.registries | filter:tableFilter)'),
     ilmButton: by.id('ilm-button'),
     logoProjectListView: by.id('logo-project-view'),
     createNewProjectButton: by.id('create-new-project-button'),
@@ -32,9 +48,13 @@ var sy = {
     createImageTag: by.id('create-image-tag'),
     createImageDescription: by.model('vm.createImage.description'),
     createImageSave: by.id('create-image-save'),
+    createImageList: by.repeater('image in vm.images'),
     createTestModal: by.className('ui fullscreen modal transition create test'),
     createTestHeader: by.id('create-test-header'),
     createTestDisplayName: by.id("create-test-display-name"),
+    createTestTagSuccess: by.model("vm.createTest.tagging.onSuccess"),
+    createTestTagFailure: by.model("vm.createTest.tagging.onFailure"),
+    createTestDescription: by.model("vm.createTest.description"),
     createTestProviderDropdown: by.className('ui search fluid dropdown testProvider'),
     createTestProviderMenuTransitioner: by.className('menu transition visible'),
     createTestImagesToTest: by.css('[placeholder="All images"]'),
@@ -71,6 +91,28 @@ describe('ILM', function() {
         element(sy.usernameInputField).sendKeys('admin ');
         element(sy.passwordInputField).sendKeys('shipyard');
         element(sy.loginSubmitButton).click();
+    });
+
+    it('should be able to navigate to registries tab', function() {
+        console.log("navigate to registries view");
+        element(sy.registriesButton).click();
+        expect(element(sy.addNewRegistry).isDisplayed()).toBeTruthy();
+    });
+
+    it('should be able to add a new registry', function() {
+        console.log("add new registry");
+        element(sy.addNewRegistry).click();
+        expect(element(by.css('.ui.dividing.header')).isDisplayed()).toBeTruthy();
+        element(sy.addRegistryName).sendKeys(config.registryName);
+        element(sy.addRegistryAddress).sendKeys(config.registryAddress);
+        element(sy.addRegistryUsername).sendKeys(config.registryUsername);
+        element(sy.addRegistryPassword).sendKeys(config.registryPassword);
+        element(sy.addRegistrySkipTLS).click();
+        element(sy.addRegistryButton).click();
+        var registryDetails = element(sy.addRegistryList.row(0));
+        var registry = registryDetails.all(by.tagName('td'));
+        expect(registry.get(0).getText()).toEqual(config.registryName);
+        expect(registry.get(1).getText()).toEqual(config.registryAddress);
     });
 
     it('should be able to navigate to project list', function() {
@@ -160,6 +202,13 @@ describe('ILM', function() {
         element(sy.createImageSave).click();
     });
 
+    it('should edit image', function() {
+        console.log("edit image");
+        var imageDetails = element(sy.createImageList.row(0));
+        imageDetails.element(by.css('i[class="pencil icon"]')).click();
+        browser.wait(protractor.ExpectedConditions.visibilityOf(element(by.css('div[data-value="Clair [Internal]"]')), 60000));
+    });
+
     it('should open the tests modal window', function() {
         console.log("open the add test modal window");
         browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.createNewTestButton), 60000));
@@ -183,6 +232,9 @@ describe('ILM', function() {
         browser.wait(protractor.ExpectedConditions.visibilityOf($(sy.createTestSelectImageToTestCSS)), 60000);
         element(sy.createTestSelectImageToTest).click();
         element(sy.createTestDisplayName).sendKeys(config.testName);
+        element(sy.createTestTagSuccess).sendKeys(config.testTagSuccess);
+        element(sy.createTestTagFailure).sendKeys(config.testTagFailure);
+        element(sy.createTestDescription).sendKeys(config.testDescription);
         browser.sleep(2000);
         expect(
             element(sy.createTestDisplayName).getAttribute('value')
