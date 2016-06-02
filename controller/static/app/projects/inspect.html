@@ -25,18 +25,18 @@
             <div class="ui segment page">
                 <div class="ui grid">
                     <span style="float: right">
-                        <img src="app/ILM Logo_72.png" style="height:60px; width:200px"/>
+                        <img id="logo-project-inspect-view" src="app/ILM Logo_72.png" style="height:60px; width:200px"/>
                     </span>
                     <div class="column row">
                         <div class="column">
-                            <div ng-click="vm.showProjectHistory()" class="ui small blue labeled icon button">
+                            <div id="history-project-inspect-view" ng-click="vm.showProjectHistory()" class="ui small blue labeled icon button">
                                 <i class="clock icon"></i> Project History
                             </div>
                             <span ng-show="!vm.refresh" style="float: right">
-                                <a ng-click="vm.startRefresh(vm.results.projectId)" style="color: #006D95; cursor: pointer; font-weight: bold">Auto Refresh <i class="refresh icon"></i></a>
+                                <a id="auto-refresh-enabled" ng-click="vm.startRefresh(vm.results.projectId)" style="color: #006D95; cursor: pointer; font-weight: bold">Auto Refresh <i class="refresh icon"></i></a>
                             </span>
                             <span ng-show="vm.refresh" style="float: right">
-                                <a ng-click="vm.cancelRefresh()" style="color: darkgray; cursor: pointer; font-weight: bold">Auto Refresh <i class="stop icon"></i></a>
+                                <a id="auto-refresh-disabled" ng-click="vm.cancelRefresh()" style="color: darkgray; cursor: pointer; font-weight: bold">Auto Refresh <i class="stop icon"></i></a>
                             </span>
                             <h3 class="ui header">
                                 <span id="inspect-go-to-projects" style="float: right">
