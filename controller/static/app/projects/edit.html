@@ -858,14 +858,14 @@
                                 <h4 class="ui header">Images Details &nbsp &nbsp &nbsp
                                     <div class="field" style="display: inline-block">
                                         <div class="item">
-                                            <div class="ui toggle checkbox" ng-click="vm.skipImages=!vm.skipImages">
+                                            <div id="image-verification-slider" class="ui toggle checkbox" ng-click="vm.skipImages=!vm.skipImages">
                                                 <input type="checkbox" name="public" ng-model="vm.skipImages">
                                                 <label style="font-weight: lighter">Disable image verification</label>
                                             </div>
-                                            <i class="blue help circle icon"></i>
+                                            <i id="help-circle-image-verification" class="blue help circle icon"></i>
                                             <div class="ui popup" style="max-width: 450px;">
-                                                <p ng-if="!vm.skipImages">Click the slider to disable image verification.</p>
-                                                <p ng-if="vm.skipImages">Click the slider to enable image verification.</p>
+                                                <p id="image-verification-disable-tooltip" ng-if="!vm.skipImages">Click the slider to disable image verification.</p>
+                                                <p id="image-verification-enable-tooltip" ng-if="vm.skipImages">Click the slider to enable image verification.</p>
                                             </div>
                                         </div>
                                     </div>
@@ -927,14 +927,14 @@
                                 <h4 class="ui header">Tests Details &nbsp &nbsp &nbsp
                                     <div class="field" style="display: inline-block">
                                         <div class="item">
-                                            <div class="ui toggle checkbox" ng-click="vm.skipTests=!vm.skipTests">
+                                            <div id="test-verification-slider" class="ui toggle checkbox" ng-click="vm.skipTests=!vm.skipTests">
                                                 <input type="checkbox" name="public" ng-model="vm.skipTests">
                                                 <label style="font-weight: lighter">Disable test verification</label>
                                             </div>
-                                            <i class="blue help circle icon"></i>
+                                            <i id="help-circle-test-verification" class="blue help circle icon"></i>
                                             <div class="ui popup" style="max-width: 450px;">
-                                                <p ng-if="!vm.skipTests">Click the slider to disable test verification.</p>
-                                                <p ng-if="vm.skipTests">Click the slider to enable test verification.</p>
+                                                <p id="test-verification-disable-tooltip" ng-if="!vm.skipTests">Click the slider to disable test verification.</p>
+                                                <p id="test-verification-enable-tooltip" ng-if="vm.skipTests">Click the slider to enable test verification.</p>
                                             </div>
                                         </div>
                                     </div>

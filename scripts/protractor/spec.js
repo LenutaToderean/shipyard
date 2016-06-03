@@ -146,6 +146,12 @@ describe('ILM', function() {
         expect(element(by.id('empty-project-list-message')).isDisplayed()).toBeTruthy();
     });
 
+    it('should have the refresh button', function() {
+        console.log("should have a refresh button in the project list view");
+        expect(element(by.id('refresh-project-button')).isDisplayed()).toBeTruthy();
+        element(by.id('refresh-project-button')).click();
+    });
+
     it('should be able to navigate to the project create view', function() {
         console.log("navigate to project create view");
         element(sy.createNewProjectButton).click();
@@ -197,6 +203,27 @@ describe('ILM', function() {
         expect(element(sy.logoProjectEditView).isDisplayed()).toBeTruthy();
     });
 
+    it('should see tooltip for disable image verification when hovering over it', function() {
+        console.log("open tooltip when hovering over disable image verification question mark");
+        browser.actions().mouseMove(element(by.id('help-circle-image-verification'))).perform();
+        browser.sleep(1000);
+        expect(element(by.id('image-verification-disable-tooltip')).isDisplayed()).toBeTruthy();
+    });
+
+    it('check tooltip message changes after clicking the disable image verification slider', function() {
+        console.log("tooltip message changes after clicking the disable image verification slider");
+        browser.actions().mouseMove(element(by.id('help-circle-image-verification'))).perform();
+        browser.sleep(1000);
+        expect(element(by.id('image-verification-disable-tooltip')).isDisplayed()).toBeTruthy();
+        expect(element(by.id('image-verification-disable-tooltip')).getText()).toEqual('Click the slider to disable image verification.');
+        element(by.id('image-verification-slider')).click();
+        browser.actions().mouseMove(element(by.id('help-circle-image-verification'))).perform();
+        browser.sleep(1000);
+        expect(element(by.id('image-verification-enable-tooltip')).isDisplayed()).toBeTruthy();
+        expect(element(by.id('image-verification-enable-tooltip')).getText()).toEqual('Click the slider to enable image verification.');
+        element(by.id('image-verification-slider')).click();
+    });
+
     it('should open modal window for add image', function() {
         console.log("open modal window for add image");
         element(sy.createNewImageButton).click();
@@ -245,6 +272,27 @@ describe('ILM', function() {
         var image = imageDetails.all(by.tagName('td'));
         expect(image.get(1).getText()).toEqual(config.imageName);
         expect(image.get(3).getText()).toEqual(config.editTag);
+    });
+
+    it('should see tooltip for disable test verification when hovering over it', function() {
+        console.log("open tooltip when hovering over disable test verification question mark");
+        browser.actions().mouseMove(element(by.id('help-circle-test-verification'))).perform();
+        browser.sleep(1000);
+        expect(element(by.id('test-verification-disable-tooltip')).isDisplayed()).toBeTruthy();
+    });
+
+    it('check tooltip message changes after clicking the disable test verification slider', function() {
+        console.log("tooltip message changes after clicking the disable test verification slider");
+        browser.actions().mouseMove(element(by.id('help-circle-test-verification'))).perform();
+        browser.sleep(1000);
+        expect(element(by.id('test-verification-disable-tooltip')).isDisplayed()).toBeTruthy();
+        expect(element(by.id('test-verification-disable-tooltip')).getText()).toEqual('Click the slider to disable test verification.');
+        element(by.id('test-verification-slider')).click();
+        browser.actions().mouseMove(element(by.id('help-circle-test-verification'))).perform();
+        browser.sleep(1000);
+        expect(element(by.id('test-verification-enable-tooltip')).isDisplayed()).toBeTruthy();
+        expect(element(by.id('test-verification-enable-tooltip')).getText()).toEqual('Click the slider to enable test verification.');
+        element(by.id('test-verification-slider')).click();
     });
 
     it('should open the tests modal window', function() {
