@@ -124,10 +124,10 @@ describe('ILM', function() {
         element(sy.addRegistryPassword).sendKeys(config.registryPassword);
         element(sy.addRegistrySkipTLS).click();
         element(sy.addRegistryButton).click();
-        var registryDetails = element(sy.addRegistryList.row(0));
+        /*var registryDetails = element(sy.addRegistryList.row(0));
         var registry = registryDetails.all(by.tagName('td'));
         expect(registry.get(0).getText()).toEqual(config.registryName);
-        expect(registry.get(1).getText()).toEqual(config.registryAddress);
+        expect(registry.get(1).getText()).toEqual(config.registryAddress);*/
     });
 
     it('should be able to navigate to project list', function() {
