@@ -252,6 +252,11 @@ describe('ILM', function() {
         browser.wait(protractor.until.elementLocated(sy.createImageSave), 180000);
         browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.createImageSave), 60000));
         element(sy.createImageSave).click();
+        browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.createImageList.row(0)), 60000));
+        var imageDetails = element(sy.createImageList.row(0));
+        var image = imageDetails.all(by.tagName('td'));
+        expect(image.get(1).getText()).toEqual(config.imageName);
+        expect(image.get(3).getText()).toEqual(config.tag);
     });
 
     it('should be able to edit an existing image', function() {
@@ -328,6 +333,10 @@ describe('ILM', function() {
         );
         browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.createTestSaveButton), 60000));
         element(sy.createTestSaveButton).click();
+        browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.editProjectList.row(0)), 60000));
+        var testDetails = element(sy.editProjectList.row(0));
+        var test = testDetails.all(by.tagName('td'));
+        expect(test.get(1).getText()).toEqual(config.testName);
     });
 
     it('should be able to edit an existing test', function() {
