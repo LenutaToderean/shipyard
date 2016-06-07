@@ -12,6 +12,7 @@ var config = {
     testNameEdit: 'Test alpine',
     imageName: 'alpine',
     tag: 'latest',
+    imageDescriptionEdit: 'new image description',
     editTag: '2.6'
 };
 // TODO: change selectors to id/model/repeaters
@@ -67,8 +68,8 @@ var sy = {
     createTestProviderMenuTransitioner: by.className('menu transition visible'),
     createTestImagesToTest: by.css('[placeholder="All images"]'),
     createTestImagesToTestCSS: '[placeholder="All images"]',
-    createTestSelectImageToTest: by.css('[data-value="' + config.imageName + ':' + config.editTag + '"]'),
-    createTestSelectImageToTestCSS: '[data-value="' + config.imageName + ':' + config.editTag + '"]',
+    createTestSelectImageToTest: by.css('[data-value="' + config.imageName + ':' + config.tag + '"]'),
+    createTestSelectImageToTestCSS: '[data-value="' + config.imageName + ':' + config.tag + '"]',
     createTestSaveButton: by.id('test-create-save-button'),
     editTestHeader: by.id('edit-test-header'),
     editTestApply: by.id('edit-test-apply'),
@@ -265,17 +266,20 @@ describe('ILM', function() {
         var imageDetails = element(sy.createImageList.row(0));
         imageDetails.element(by.css('i[class="pencil icon"]')).click();
         expect(element(sy.editImageHeader).getText()).toEqual(config.imageName);
-        element(by.id('edit-image-tag')).click();
-        browser.wait(protractor.until.elementLocated(by.id('edit-image-tag-results')), 180000);
-        browser.wait(protractor.ExpectedConditions.visibilityOf(element.all(by.id('edit-image-tag-results')).get(1), 180000));
-        element.all(by.id('edit-image-tag-results')).get(1).click();
-        browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.editImageApply), 180000));
+        //element(by.id('edit-image-tag')).click();
+        //browser.wait(protractor.until.elementLocated(by.id('edit-image-tag-results')), 180000);
+        //browser.wait(protractor.ExpectedConditions.visibilityOf(element.all(by.id('edit-image-tag-results')).get(1), 180000));
+        //element.all(by.id('edit-image-tag-results')).get(1).click();
+        //browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.editImageApply), 180000));
+        element(by.model('vm.editImage.description')).clear();
+        element(by.model('vm.editImage.description')).sendKeys(config.imageDescriptionEdit);
+        browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.editImageApply), 60000));
         element(sy.editImageApply).click();
         browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.createImageList.row(0)), 60000));
         var imageDetails = element(sy.createImageList.row(0));
         var image = imageDetails.all(by.tagName('td'));
         expect(image.get(1).getText()).toEqual(config.imageName);
-        expect(image.get(3).getText()).toEqual(config.editTag);
+        expect(image.get(4).getText()).toEqual(config.imageDescriptionEdit);
     });
 
     it('should see tooltip for disable test verification when hovering over it', function() {
