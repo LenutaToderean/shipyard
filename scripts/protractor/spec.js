@@ -124,7 +124,6 @@ describe('ILM', function() {
         element(sy.addRegistryPassword).sendKeys(config.registryPassword);
         element(sy.addRegistrySkipTLS).click();
         element(sy.addRegistryButton).click();
-        browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.addRegistryList.row(0))), 60000);
         var registryDetails = element(sy.addRegistryList.row(0));
         var registry = registryDetails.all(by.tagName('td'));
         expect(registry.get(0).getText()).toEqual(config.registryName);
