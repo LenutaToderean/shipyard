@@ -360,7 +360,7 @@ describe('ILM', function() {
         expect(test.get(1).getText()).toEqual(config.testNameEdit);
     });
     
-    /*it('should be able to run the test', function() {
+    it('should be able to run the test', function() {
         console.log("run the test");
         browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.editProjectList.row(0)), 60000));
         // Click the play icon for the test
@@ -413,8 +413,8 @@ describe('ILM', function() {
     it('should be able to check the project history', function() {
         console.log("check project history");
         expect(element(by.id('history-project-inspect-view')).isDisplayed()).toBeTruthy();
-        /!*element(by.id('history-project-inspect-view')).click();
-        expect(element(by.id('history-header-inspect-view')).isDisplayed()).toBeTruthy();*!/
+        /*element(by.id('history-project-inspect-view')).click();
+        expect(element(by.id('history-header-inspect-view')).isDisplayed()).toBeTruthy();*/
     });
     
     it('should have the build we just ran', function() {
@@ -429,7 +429,7 @@ describe('ILM', function() {
         );
     });
 
-    /!*it('should be able to check tests results', function() {
+    /*it('should be able to check tests results', function() {
         console.log("check test results");
         browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.inspectViewBuilds.row(0)), 60000));
         var inspectButton = element(sy.inspectViewBuilds.row(0));
@@ -443,7 +443,7 @@ describe('ILM', function() {
         var testResultsHeader = element(by.css('.ui.header .content'));
         browser.wait(protractor.ExpectedConditions.visibilityOf(testResultsHeader, 60000));
         expect(testResultsHeader.getText()).toEqual('Clair report for image ' + config.imageName + ":" + config.tag);*!/
-    });*!/
+    });*/
 
     it('should be able to go to edit view', function() {
         console.log("skip to edit project view");
@@ -517,6 +517,6 @@ describe('ILM', function() {
         browser.wait(protractor.ExpectedConditions.visibilityOf(element(sy.deleteProjectHeader), 60000));
         element(sy.deleteProjectButton).click();
         expect(element(sy.editProjectList.row(0)).isPresent()).toBeFalsy();
-    });*/
+    });
 
 });
