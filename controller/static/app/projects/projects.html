@@ -61,12 +61,12 @@
                 </th>
                 </tr></thead>
                 <tbody>
-                <tr ng-repeat="a in filteredProjects = (vm.projects | filter:tableFilter) track by $index">
+                <tr ng-repeat="project in filtered = (vm.projects | filter:tableFilter) track by $index">
                     <td class="collapsing">
                         {{$index+1}}
                     </td>
-                    <td>{{a.name}}</td>
-                    <td class="right aligned collapsing">{{a.actionStatus}}</td>
+                    <td>{{project.name}}</td>
+                    <td class="right aligned collapsing">{{project.actionStatus}}</td>
                 </tr>
                 </tbody>
             </table>
